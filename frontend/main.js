@@ -8,12 +8,12 @@ const OAUTH_TOKEN_URL = "http://localhost:8000/o/token/";
   if (inviteParam) {
     localStorage.setItem("pending_invite", inviteParam);
 
-    // 💡 сразу очищаем адресную строку
+    //сразу очищаем адресную строку
     const cleanUrl = new URL(window.location);
     cleanUrl.searchParams.delete("invite");
     window.history.replaceState({}, document.title, cleanUrl.pathname);
 
-    // 🔑 Проверка токена
+    // Проверка токена
     const token = localStorage.getItem("access_token");
     if (token) {
       try {
