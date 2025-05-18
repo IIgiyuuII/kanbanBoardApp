@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kanban Boards</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="icon" href="data:,">
+</head>
+<body>
+  <div id="app">
+    <header class="main-header">
+      <div class="header-left">
+        <img src="/static/images/home.svg" alt="Домой" class="home-icon" onclick="goBack()" />
+        <div class="projects-title">Мои проекты</div>
+      </div>
+      <div class="header-right user-info">
+        <span class="user-name" id="user-name">Имя пользователя</span>
+        <div class="user-avatar-text" id="user-avatar">U</div>
+        <button onclick="logout()" class="logout-btn">Выйти</button>
+      </div>
+    </header>
+
+    <main></main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/static/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,914 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+  .main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  gap: 12px;
+}
+  
+  .header-left, .header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+  
+  .home-icon {
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+  }
+  
+  .projects-title {
+    font-size: 32px;
+    font-weight: bold;
+  }
+  .responsive-btn {
+  background-color: #45AE8D;
+  color: white;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+
+  
+  .user-name {
+    font-size: 24px;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+  }
+  
+  .user-avatar-text {
+    width: 44px;
+    height: 44px;
+    background-color: #45AE8D;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  
+  .logout-btn {
+    background-color: #45AE8D;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    padding: 12px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .logout-btn:hover {
+    background-color: #45AE8D;
+  }
+  
+  .board-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Равномерное распределение */
+    padding: 16px 32px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .board-title-header {
+  font-size: 16px;
+  font-weight: bold;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+  .rounded-btn {
+    background-color: #45AE8D;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .home-button {
+    font-size: 24px;
+    padding: 5px 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #333;
+  }
+  
+  h1 {
+    margin: 0;
+  }
+  
+  .board-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 30px;
+  }
+  
+  .board-card {
+    background-color: white;
+    width: 240px;
+    height: 180px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    padding: 15px;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: 0.2s ease;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .board-card .menu-dots {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+  .board-card .dropdown {
+    position: absolute;
+    top: 28px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-width: 120px;
+    z-index: 100;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+  .board-card .dropdown div {
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  .board-card .dropdown div:hover {
+    background-color: #f0f0f0;
+  }
+  .board-card:hover {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  
+  .board-title-center {
+    font-size: 20px;
+    font-weight: bold;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;     /* Максимум 2 строки */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-align: center;
+    max-height: 54px; /* подбирай под размер */
+  }
+  .create-board-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .create-board-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    color: #222;
+  }
+  
+  .create-board-plus {
+    font-size: 48px;
+    color: #3a7bd5;
+    line-height: 1;
+  }
+  
+  .dropdown {
+    font-size: 14px;
+    min-width: 120px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    padding: 4px 0;
+  }
+  
+  .dropdown div {
+    padding: 6px 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+  }
+  
+  .dropdown div:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .hidden {
+    display: none !important;
+  }
+  
+  .columns-container {
+    display: flex;
+    gap: 20px;
+    padding: 30px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  .tasks-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .sortable-ghost {
+    opacity: 0.4;
+    background: #e0e0e0;
+  }
+  .columns-container {
+    display: flex;
+    align-items: flex-start; /* важно! */
+    gap: 20px;
+  }
+  .column {
+    position: relative;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px;
+    width: 280px;
+    min-height: 200px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    min-height: auto; /* 🟢 убираем фиксированную минимальную высоту */
+    height: auto; 
+  }
+  .column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .column-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 1px; /* базовый отступ от правого края */
+  }
+  
+  .sort-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 25px; 
+    cursor: pointer;
+    opacity: 0.7;
+  }
+  
+  .menu-dots {
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    margin-right: 0; /* почти у самого края */
+  }
+  .sort-dropdown {
+    position: absolute;
+    top: 22px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    z-index: 100;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    min-width: 160px;
+  }
+  
+  .sort-dropdown div {
+    padding: 8px 10px;
+    cursor: pointer;
+  }
+  
+  .sort-dropdown div:hover {
+    background-color: #f0f0f0;
+  }
+
+  .column h3 {
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+  
+  .menu-dots {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 28px; /* было 18px */
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+  }
+  .menu-dots:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  .menu-dots .dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-width: 120px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+  }
+  
+  .menu-dots .dropdown div {
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  .menu-dots .dropdown div:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .add-column-card {
+    background-color: #fff;
+    border: 2px dashed #aaa;
+    border-radius: 12px;
+    width: 250px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+    color: #888;
+    cursor: pointer;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    text-align: center;
+  }
+  .add-card-btn {
+    padding: 8px 12px;
+    background-color: #f3f3f3;
+    border-radius: 6px;
+    margin-top: 10px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+  }
+  
+  .add-card-btn:hover {
+    background-color: #e2e2e2;
+  }
+  
+  /* Стиль для кнопки добавления новой колонки */
+  .add-column-card {
+    padding: 10px;
+    background-color: #f3f3f3;
+    border-radius: 6px;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 20px;
+    font-weight: bold;
+    transition: background-color 0.2s;
+  }
+  
+  .add-column-card:hover {
+    background-color: #e2e2e2;
+  }
+  .task-card {
+    position: relative;
+    padding: 10px;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 10px;
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .task-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+  .priority-strip {
+    width: 40px; /* короче полоска */
+    height: 6px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .centered-title {
+    font-weight: bold;
+    font-size: 16px;
+    text-align: left;
+    margin-bottom: 4px;
+  }
+  .centered-details {
+    font-size: 13px;
+    color: #666;
+    text-align: left;
+  }
+  .task-title {
+    font-weight: bold;
+    margin-bottom: 4px;
+    white-space: nowrap;       /* Запрет переноса текста */
+    overflow: hidden;          /* Скрытие лишнего текста */
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;    /* Добавление троеточия */
+    max-width: 100%;           /* Не выходить за пределы карточки */
+    display: block;
+  }
+
+  .task-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  .task-date,
+  .task-priority {
+    margin: 3px 0;
+  }
+  .modern-task-modal {
+    padding: 30px;
+    position: relative;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  }
+  .modern-task-modal label,
+  .modern-task-modal h3 {
+    text-align: left;
+    width: 100%;
+  }
+  
+  .close-modal {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    font-size: 22px;
+    cursor: pointer;
+  }
+  
+  .task-section {
+    margin-top: 20px;
+  }
+  
+  .task-section label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+  }
+  .auto-resize-title {
+    width: 100%;
+    font-weight: bold;
+    resize: none;
+    overflow: hidden;
+    font-size: 14px;          
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    padding: 6px 8px;
+    box-sizing: border-box;
+    font-family: inherit;
+    line-height: 1.4;
+    max-height: 70px;         
+  }
+  
+  .task-section input,
+  .task-section textarea {
+    width: 90%;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  
+  .task-section textarea {
+    resize: vertical;
+    height: 70px;
+  }
+  
+  .priority-options {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  
+  .priority-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border 0.2s ease;
+  }
+  
+  .priority-dot.green { background-color: #4CAF50; }
+  .priority-dot.yellow { background-color: #FFC107; }
+  .priority-dot.red { background-color: #F44336; }
+  
+  .priority-dot.selected {
+    border: 2px solid #000;
+  }
+  
+  .task-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .task-footer button {
+    padding: 10px 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .save-task-btn {
+    background-color: #e53935;
+    color: white;
+  }
+  
+  .delete-task-btn {
+    background-color: #eee;
+  }
+  .column.drop-hover {
+    background-color: #e0f7fa !important;
+    border: 2px dashed #007bff;
+  }
+  .auth-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 30px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: white;
+    text-align: center;
+  }
+  .auth-container input {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #aaa;
+  }
+  .auth-container button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .auth-container button:hover {
+    background-color: #218838;
+  }
+  .modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .modal.hidden {
+    display: none;
+  }
+  
+  .modal-content {
+    background: #fff;
+    padding: 24px;
+    border-radius: 8px;
+    min-width: 300px;
+    max-width: 90%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    animation: slideUp 0.3s ease;
+    text-align: center;
+  }
+  
+  .modal-content h3 {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #333;
+  }
+  
+  .modal-content .buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  
+  .modal-content button {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+  }
+  
+  .modal-content button:first-child {
+    background-color: #d32f2f;
+    color: white;
+  }
+  
+  .modal-content button:first-child:hover {
+    background-color: #b71c1c;
+  }
+  
+  .modal-content button:last-child {
+    background-color: #e0e0e0;
+  }
+  
+  .modal-content button:last-child:hover {
+    background-color: #bdbdbd;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0 }
+    to { opacity: 1 }
+  }
+  
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0 }
+    to { transform: translateY(0); opacity: 1 }
+  }
+  .modal.members-modal {
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    animation: fadeIn 0.2s ease-out;
+  }
+  
+  .members-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 360px;
+    max-width: 90%;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    animation: scaleIn 0.25s ease-out;
+  }
+  
+  .modal-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .members-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .member-item {
+    padding: 10px 15px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-size: 15px;
+  }
+  
+  .close-btn {
+    width: 100%;
+    background-color: #45AE8D;
+  }
+  
+  /* Анимации */
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.85);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeIn {
+    from {
+      background-color: rgba(0, 0, 0, 0);
+    }
+    to {
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+  }
+ /* Общее модальное окно */
+.two-column-modal {
+  display: flex;
+  flex-direction: row;
+  max-width: 700px;
+  width: 90%;
+  height: 470px;
+}
+
+/* Левая часть — 40% */
+.task-editor-left {
+  flex: 0 0 40%;
+  padding-right: 10px;
+  overflow-y: auto;
+}
+
+/* Правая часть — 60% */
+.comment-section {
+  flex: 0 0 60%;
+  display: flex;
+  flex-direction: column;
+  padding-left: 5px;
+  border-left: 1px solid #ddd;
+  justify-content: space-between; /* 👈 Прижимаем textarea и кнопку вниз */
+  height: 100%; /* Обязательно! */
+}
+
+/* Заголовок */
+.comment-section h3 {
+  margin-bottom: 10px;
+}
+.comment-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Прижимаем всё вправо */
+  gap: 8px; /* Расстояние между полем и кнопкой */
+}
+/* Комментарии с прокруткой */
+#comments-container {
+  flex-grow: 1;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+#comments-container .comment {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+#comments-container .comment strong {
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+#comments-container .comment p {
+  background-color: #ddd;
+  padding: 10px 14px;
+  border-radius: 14px;
+  margin: 4px 0 14px 12px; /* добавлен отступ слева */
+  font-size: 14px;
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  text-align: left; /* 💡 принудительно прижимаем к левому краю */
+}
+
+/* Поле ввода комментария */
+#new-comment-text {
+  margin-top: 10px;
+  padding: 10px;
+  height: 70px; /* фиксированная высота */
+  resize: none; /* запрет на растяжение */
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+/* Кнопка отправить */
+.comment-section button {
+  width: 120px;           /* фиксированная ширина */
+  height: 50px;           /* фиксированная высота */
+  padding: 1;
+  background-color: #4CAF50;
+  color: black;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+.comment-section button:hover {
+  background-color: #45a049;
+}
+#comments-container::-webkit-scrollbar {
+  width: 6px;
+}
+#comments-container::-webkit-scrollbar-thumb {
+  background-color: #bbb;
+  border-radius: 4px;
+}
+#comments-container::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+}
+.comment-icon {
+  display: flex;
+  align-items: end;
+  gap: 4px;
+  font-size: 12px;
+  color: #555;
+}
+
+.comment-icon img {
+  width: 14px;
+  height: 14px;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group input.error {
+  border: 1px solid red;
+}
+
+
+.input-error {
+  border: 1px solid red !important;
+}
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+@media (max-width: 768px) {
+  .columns-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .main-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .task-card {
+    font-size: 14px;
+  }
+
+  .add-card-btn,
+  .add-column-card {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+@media (max-width: 600px) {
+  .btn-text {
+    display: none;
+  }
+
+  .responsive-btn {
+    padding: 6px;
+    font-size: 18px;
+  }
+
+  .user-name,
+  .logout-btn,
+  .user-avatar-text {
+    font-size: 12px;
+  }
+
+  .board-title-header {
+    font-size: 14px;
+  }
+
+  .logout-btn {
+    padding: 4px 8px;
+  }
+}
