@@ -8,12 +8,12 @@ const OAUTH_TOKEN_URL = "http://localhost:8000/o/token/";
   if (inviteParam) {
     localStorage.setItem("pending_invite", inviteParam);
 
-    //сразу очищаем адресную строку
+    // 💡 сразу очищаем адресную строку
     const cleanUrl = new URL(window.location);
     cleanUrl.searchParams.delete("invite");
     window.history.replaceState({}, document.title, cleanUrl.pathname);
 
-    // Проверка токена
+    // 🔑 Проверка токена
     const token = localStorage.getItem("access_token");
     if (token) {
       try {
@@ -465,6 +465,7 @@ window.boardSocket.onmessage = function (event) {
   await axios.post(`${API_BASE}/boards/${id}/mark_opened/`);
   const board = res.data;
   currentBoardRole = board.role;
+  const isAdmin = currentBoardRole === "admin";
   currentBoard = board;
   localStorage.setItem("last_opened_board", id);
 
@@ -517,24 +518,28 @@ container.innerHTML = "";
           <div onclick="sortTasks(${column.id}, 'comments-desc')">↓ По комментариям</div>
         </div>
       </div>
-      <div class="menu-dots" onclick="event.stopPropagation(); toggleMenu(this)">
-        &#8942;
-        <div class="dropdown hidden">
-          <div onclick="editColumn(${column.id}, '${column.title.replace(/'/g, "\\'")}', ${board.id})">Редактировать</div>
-          <div onclick="deleteColumn(${column.id}, ${board.id})">Удалить</div>
-        </div>
-      </div>
+       ${
+        isAdmin
+          ? `<div class="menu-dots" onclick="event.stopPropagation(); toggleMenu(this)">
+              &#8942;
+              <div class="dropdown hidden">
+                <div onclick="editColumn(${column.id}, '${column.title.replace(/'/g, "\\'")}', ${board.id})">Редактировать</div>
+                <div onclick="deleteColumn(${column.id}, ${board.id})">Удалить</div>
+              </div>
+            </div>`
+          : ""
+      }
     </div>
   </div>
 
 `;
- // 📦 Контейнер задач
+ // Контейнер задач
  const tasksWrapper = document.createElement("div");
  tasksWrapper.className = "tasks-wrapper";
  tasksWrapper.dataset.columnId = column.id;
  col.appendChild(tasksWrapper);
 
-  // 📝 Задачи внутри колонки
+  // Задачи внутри колонки
   column.tasks?.forEach(task => {
     const taskCard = document.createElement("div");
     taskCard.className = "task-card";
@@ -568,14 +573,15 @@ container.innerHTML = "";
     tasksWrapper.appendChild(taskCard);
   });
   
+  if (isAdmin) {
+    // ➕ Кнопка добавления карточки
+    const addCardBtn = document.createElement("div");
+    addCardBtn.className = "add-card-btn";
+    addCardBtn.innerText = "+ Add a card";
+    addCardBtn.onclick = () => createTask(column.id);
+    col.appendChild(addCardBtn);
 
-  // ➕ Кнопка добавления карточки
-  const addCardBtn = document.createElement("div");
-  addCardBtn.className = "add-card-btn";
-  addCardBtn.innerText = "+ Add a card";
-  addCardBtn.onclick = () => createTask(column.id);
-  col.appendChild(addCardBtn);
-
+  }
   container.appendChild(col);
 });
 // 📦 DnD для задач с помощью Sortable.js
@@ -622,24 +628,26 @@ document.querySelectorAll(".tasks-wrapper").forEach(wrapper => {
 
 
 
+  if (isAdmin) {
+    const addColumn = document.createElement("div");
+    addColumn.className = "add-column-card";
+    addColumn.innerHTML = "+";
+    addColumn.onclick = () => {
+      const title = prompt("Название новой колонки:");
+      if (title) {
+        axios.post(`${API_BASE}/columns/`, { board: board.id, title }).then(() => {
 
-  const addColumn = document.createElement("div");
-  addColumn.className = "add-column-card";
-  addColumn.innerHTML = "+";
-  addColumn.onclick = () => {
-    const title = prompt("Название новой колонки:");
-    if (title) {
-      axios.post(`${API_BASE}/columns/`, { board: board.id, title }).then(() => {
+          if (window.boardSocket && window.boardSocket.readyState === WebSocket.OPEN) {
+            window.boardSocket.send(JSON.stringify({ message: "reload" }));
+          }
 
-        if (window.boardSocket && window.boardSocket.readyState === WebSocket.OPEN) {
-          window.boardSocket.send(JSON.stringify({ message: "reload" }));
-        }
+          openBoard(board.id)
+        });
+      }
+    };
+    container.appendChild(addColumn);
+  }
 
-        openBoard(board.id)
-      });
-    }
-  };
-  container.appendChild(addColumn);
   new Sortable(container, {
     animation: 150,
     handle: '.column-header',
