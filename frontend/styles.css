@@ -424,6 +424,41 @@ body {
     border-radius: 4px;
     margin-bottom: 8px;
   }
+  .assignee-selector {
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  }
+  #assignee-dropdown {
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 8px;
+  background-color: white;
+  z-index: 1000;
+  position: absolute;
+  width: 200px;
+  box-sizing: border-box;
+  text-align: left; /* Выравнивание всего контента влево */
+  }
+
+  .assignee-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Прижатие элементов влево */
+    margin-bottom: 4px;
+  }
+
+  .assignee-item input[type="checkbox"] {
+    margin-right: 4px; /* небольшой отступ между чекбоксом и текстом */
+  }
+
+  .assignee-name {
+    font-size: 14px;
+    white-space: nowrap;
+  }
   .centered-title {
     font-weight: bold;
     font-size: 16px;
@@ -435,6 +470,46 @@ body {
     color: #666;
     text-align: left;
   }
+  .task-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  }
+
+  .task-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .task-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .done-toggle {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #4CAF50;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-bottom: 4px;
+    position: relative;
+  }
+
+  .done-toggle.done::after {
+    content: '✔';
+    position: absolute;
+    font-size: 16px;
+    color: #4CAF50;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+  }
+
+
   .task-title {
     font-weight: bold;
     margin-bottom: 4px;
@@ -446,14 +521,14 @@ body {
     display: block;
   }
 
-  .task-details {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
-    margin-top: 4px;
+  
+  .task-date {
+    
+    font-size: 12px;          
+    color: #777;             
+    margin-top: 1px;          
   }
-  .task-date,
+
   .task-priority {
     margin: 3px 0;
   }
@@ -736,7 +811,7 @@ body {
   flex-direction: row;
   max-width: 700px;
   width: 90%;
-  height: 470px;
+  height: 550px;
 }
 
 /* Левая часть — 40% */

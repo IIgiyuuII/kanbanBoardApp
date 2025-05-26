@@ -183,6 +183,7 @@ function checkAuth() {
 
   if (token) {
     setAuthToken(token);
+    
     renderMainScreen();
   } else {
     renderAuthScreen();
@@ -558,17 +559,45 @@ container.innerHTML = "";
     if (task.priority === "low") priorityColor = "#4CAF50";
     if (task.priority === "high") priorityColor = "#f44336";
 
-    taskCard.innerHTML = `
-  <div class="priority-strip" style="background-color: ${priorityColor};"></div>
-  <div class="task-title centered-title">${task.title}</div>
-  <div class="task-details centered-details">
-    <span class="task-date">${formattedDate}</span>
-    <div class="comment-icon">
-      <img src="/static/images/comment-icon.svg" alt="Комментарии" />
-      <span>${task.comments_count || 0}</span>
-    </div>
-  </div>
-`;
+   taskCard.innerHTML = `
+      <div class="priority-strip" style="background-color: ${priorityColor};"></div>
+      <div class="task-content">
+        <div class="task-left">
+          <div class="task-title">${task.title}</div>
+          <div class="task-date">${formattedDate}</div>
+        </div>
+        <div class="task-right">
+          <div class="done-toggle ${task.is_done ? 'done' : ''}" data-task-id="${task.id}"></div>
+          <div class="comment-icon">
+            <img src="/static/images/comment-icon.svg" alt="Комментарии" />
+            <span>${task.comments_count || 0}</span>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Добавь обработчик в openBoard или сразу после вставки innerHTML:
+    taskCard.querySelector('.done-toggle').addEventListener('click', async (e) => {
+      e.stopPropagation(); // Не открываем редактор
+      const taskId = e.currentTarget.dataset.taskId;
+      const currentToggle = e.currentTarget;
+      const isCurrentlyDone = currentToggle.classList.contains('done');
+      const newIsDone = !isCurrentlyDone;
+
+      try {
+        // Отправляем PATCH запрос с новым значением
+        await axios.patch(`${API_BASE}/tasks/${taskId}/`, { is_done: newIsDone });
+
+        // ✅ Локально меняем класс для отображения галочки
+        currentToggle.classList.toggle('done', newIsDone);
+      } catch (err) {
+        console.error(err);
+        alert(err.response?.data?.error || "Не удалось обновить статус задачи.");
+      }
+    });
+
+
+
     taskCard.onclick = () => openTaskEditor(task.id, column.id);
     tasksWrapper.appendChild(taskCard);
   });
@@ -675,13 +704,20 @@ document.querySelectorAll(".tasks-wrapper").forEach(wrapper => {
   
   
 };
+  
+
 async function createTask(columnId) {
   const token = localStorage.getItem("access_token");
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
   await axios.post(`${API_BASE}/tasks/`, {
-    title: "новая задача",
-    column: columnId,
+    title: 'Новая задача',
+    column: columnId,  
+    description: '',   
+    priority: 'medium', 
+    start_date: null,   
+    due_date: null,     
+    assignee_ids: []
   });
 
   if (window.boardSocket && window.boardSocket.readyState === WebSocket.OPEN) {
@@ -1163,9 +1199,21 @@ window.openTaskEditor = async (taskId, columnId) => {
     </div>
 
     <div class="task-section">
-      <label for="task-due-${taskId}">Дата окончания</label>
-      <input type="date" id="task-due-${taskId}" value="${task.due_date ? new Date(task.due_date).toISOString().substr(0, 10) : ''}" />
+      <div style="display: flex; justify-content: space-between; gap: 10px;">
+        <div style="flex: 1;">
+          <label for="task-start-${taskId}">Дата начала</label>
+          <input type="date" id="task-start-${taskId}" value="${task.start_date ? new Date(task.start_date).toISOString().substr(0, 10) : ''}" />
+          <div id="start-error-${taskId}" class="date-error" style="color: red; font-size: 12px; display: none;"></div>
+        </div>
+        <div style="flex: 1;">
+          <label for="task-due-${taskId}">Дата окончания</label>
+          <input type="date" id="task-due-${taskId}" value="${task.due_date ? new Date(task.due_date).toISOString().substr(0, 10) : ''}" />
+          <div id="due-error-${taskId}" class="date-error" style="color: red; font-size: 12px; display: none;"></div>
+        </div>
+      </div>
     </div>
+
+
 
     <div class="task-section">
       <label>Приоритет</label>
@@ -1177,8 +1225,16 @@ window.openTaskEditor = async (taskId, columnId) => {
     </div>
 
     <div class="task-section">
+      <label>Ответственный</label>
+      <div id="assignee-selector" class="assignee-selector">
+        <div id="selected-assignees"></div>
+        <div id="assignee-dropdown" class="dropdown hidden"></div>
+      </div>
+    </div>
+
+    <div class="task-section">
       <label for="task-desc-${taskId}">Описание</label>
-      <textarea id="task-desc-${taskId}" placeholder="Leave the comment">${task.description || ''}</textarea>
+      <textarea id="task-desc-${taskId}" placeholder="Напишите текст здесь...">${task.description || ''}</textarea>
     </div>
 
     <div class="task-footer">
@@ -1199,16 +1255,89 @@ window.openTaskEditor = async (taskId, columnId) => {
 
   `;
   document.body.appendChild(modal);
+  const membersRes = await axios.get(`${API_BASE}/boards/${currentBoardId}/`);
+  const members = membersRes.data.members;
+  const currentAssignees = task.assignees || [];
 
+  const dropdown = modal.querySelector("#assignee-dropdown");
+  const selected = modal.querySelector("#selected-assignees");
+
+  function renderAssigneeDropdown() {
+  dropdown.innerHTML = members.map(user => {
+    const checked = currentAssignees.some(a => a.id === user.id) ? "checked" : "";
+    return `
+      <div class="assignee-item">
+        <input type="checkbox" value="${user.id}" ${checked}/>
+        <span class="assignee-name">${user.username}</span>
+      </div>
+    `;
+  }).join("");
+  }
+
+  const startInput = modal.querySelector(`#task-start-${taskId}`);
+const dueInput = modal.querySelector(`#task-due-${taskId}`);
+const startError = modal.querySelector(`#start-error-${taskId}`);
+const dueError = modal.querySelector(`#due-error-${taskId}`);
+
+function validateDates() {
+  const startDate = startInput.value ? new Date(startInput.value) : null;
+  const dueDate = dueInput.value ? new Date(dueInput.value) : null;
+  let valid = true;
+
+  if (startDate && dueDate) {
+    if (dueDate < startDate) {
+      dueError.style.display = "block";
+      dueError.textContent = "Дата окончания не может быть раньше даты начала";
+      valid = false;
+    } else {
+      dueError.style.display = "none";
+    }
+
+    if (startDate > dueDate) {
+      startError.style.display = "block";
+      startError.textContent = "Дата начала не может быть позже даты окончания";
+      valid = false;
+    } else {
+      startError.style.display = "none";
+    }
+  } else {
+    dueError.style.display = "none";
+    startError.style.display = "none";
+  }
+
+  return valid;
+}
+
+startInput.addEventListener("change", validateDates);
+dueInput.addEventListener("change", validateDates);
+
+  function renderSelectedAssignees() {
+    selected.innerText = members
+      .filter(user => dropdown.querySelector(`input[value="${user.id}"]`)?.checked)
+      .map(user => user.username)
+      .join(", ") || "Нажмите для выбора";
+  }
+
+  modal.querySelector("#assignee-selector").onclick = () => {
+    dropdown.classList.toggle("hidden");
+  };
+
+  dropdown.onclick = (e) => {
+    e.stopPropagation();
+    renderSelectedAssignees();
+  };
+
+  renderAssigneeDropdown();
+  renderSelectedAssignees();
 
   const titleTextarea = modal.querySelector(".auto-resize-title");
-const resizeTitle = () => {
-  titleTextarea.style.height = "auto";
-  const scrollHeight = Math.min(titleTextarea.scrollHeight, 90); // 90px — тот же лимит, что и в CSS
-  titleTextarea.style.height = scrollHeight + "px";
-};
-resizeTitle();
-titleTextarea.addEventListener("input", resizeTitle);
+  const resizeTitle = () => {
+    titleTextarea.style.height = "auto";
+    const scrollHeight = Math.min(titleTextarea.scrollHeight, 90); // 90px — тот же лимит, что и в CSS
+    titleTextarea.style.height = scrollHeight + "px";
+  };
+  resizeTitle();
+  titleTextarea.addEventListener("input", resizeTitle);
 
 
   // Выводим комментарии в контейнер
@@ -1258,16 +1387,24 @@ scrollCommentsToBottom();
   if (saveBtn) {
     saveBtn.onclick = async () => {
       const title = modal.querySelector(`#task-title-${taskId}`).value;
+      const start_date = modal.querySelector(`#task-start-${taskId}`).value;
       const due_date = modal.querySelector(`#task-due-${taskId}`).value;
       const description = modal.querySelector(`#task-desc-${taskId}`).value;
       const priority = modal.querySelector('.priority-dot.selected')?.dataset.value || 'medium';
+      const assigneeIds = Array.from(dropdown.querySelectorAll("input:checked")).map(i => parseInt(i.value));
+
+      if (!validateDates()) {
+      return; // Остановим сохранение, если даты некорректны
+      }
 
     try {
       await axios.patch(`${API_BASE}/tasks/${taskId}/`, {
         title,
+        start_date: start_date || null,
         due_date: due_date || null,
         description,
-        priority
+        priority,
+        assignee_ids: assigneeIds
       });
 
       const taskCard = document.querySelector(`.task-card[data-task-id="${taskId}"]`);
